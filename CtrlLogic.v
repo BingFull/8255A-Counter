@@ -126,3 +126,63 @@ module CtrlLogic(
 		else
 			PBInLd = 1'b1;  //其它情况
 			
+	 always @(reset or ControlFlag or ModeA or ModeB or Din[3:0] or PAIO)  //PCOutLd
+	 	if(reset)
+		 	PCOutLd = 8'b00000000;
+		else if(ControlFlag==0) begin  //置位复位控制字，PC在按位操作中，PCOutLd为0的位被选中
+			case (Din[3:1]) begin
+			  3'b000: PCOutLd = 8'b11111110; 
+			  3'b001: PCOutLd = 8'b11111101; 
+			  3'b010: PCOutLd = 8'b11111011; 
+			  3'b011: PCOutLd = 8'b11110111; 
+			  3'b100: PCOutLd = 8'b11101111; 
+			  3'b101: PCOutLd = 8'b11011111; 
+			  3'b110: PCOutLd = 8'b10111111; 
+			  3'b111: PCOutLd = 8'b01111111; 
+			  default: PCOutLd = 8'b11111111; 
+			endcase   
+		end
+		else  //方式选择控制字，作数据I/O的相应位为0
+			if(ModeA==2'b00 && ModeB==1'b0)
+				PCOutLd = 8'b00000000;  //A口方式0，B口方式0
+			else if(ModeA==2'b00 && ModeB==1'b1)
+				PCOutLd = 8'b00000111;  //A口方式0，B口方式1
+			else if(ModeA==2'b01 && PAIO==1'b0 && ModeB==1'b0)
+				PCOutLd = 8'b00111000;  //A方式1输入，B方式0
+			else if(ModeA==2'b01 && PAIO==1'b0 && ModeB==1'b1)
+				PCOutLd = 8'b00111111;  //A方式1输入，B方式1
+			else if(ModeA==2'b01 && PAIO==1'b1 && ModeB==1'b0)
+				PCOutLd = 8'b11001000;  ////A方式1输出，B方式0
+			else if(ModeA==2'b01 && PAIO==1'b1 && ModeB==1'b1)
+				PCOutLd = 8'b11001111;  //A方式1输出，B方式1
+			else if(ModeA==2'b10 && ModeB==1'b0)
+				PCOutLd = 8'b11111000;  //A口方式2，B口方式0
+			else if(ModeA==2'b10 && ModeB==1'b1)
+				PCOutLd = 8'b11111111;  //A口方式2，B口方式1
+			else 
+				PCOutLd = 8'b00000000;  //其它情况
+				
+		always @(reset or A or nRD or ModeA or ModeB)  //输出给Dout_Mux的选路信号
+			if(reset)
+				Dout_Select = 3'b000;
+			else if(nRD==1'b0)
+				case(A)begin
+					2'b00:  //数据端口A
+						if(ModeA == 2'b00)
+							Dout_Select = 3'b000;  //工作于方式0，口A输入数据不锁存
+						else
+							Dout_Select = 3'b001;  //口A输入数据锁存
+					2'b01:  //数据端口B
+						if(ModeB == 1'b0)
+							Dout_Select = 3'b010;  //工作于方式0，口B输入数据不锁存
+						else
+							Dout_Select = 3'b011;  //口B输入数据锁存
+					2'b10: Dout_Select = 3'b100;  //数据端口C，口C输入数据不锁存
+					2'b11: Dout_Select = 3'b110;
+				 endcase
+				 end
+			 else
+			 	Dout_Select = Dout_Select;
+
+endmodule
+	 	
