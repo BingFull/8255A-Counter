@@ -110,5 +110,19 @@ module CtrlLogic(
 		else
 			PCEn[7:3] = {{4{PCUpIO}},PCLowIO};  //A口方式0
 				
-			
+ 	always @(reset or A or nRD)  //PAInLd
+	 	if (reset)
+	   		PAInLd = 1'b0;  //复位清零
+	 	else if (nCS==1'b0 && A==2'b00 && nRD==1'b0)
+	  		PAInLd = 1'b0;  //A口选中，读
+	 	else
+	   		PAInLd = 1'b1;  //其它情况
+	   
+	 always @(reset or A or nRD)   //PBInLd
+	 	if(reset)
+		 	PBInLd = 1'b0;  //复位清零
+		else if(nCS==1'b0 && A==2'b01 && nRD==1'b0)
+			PBInLd = 1'b0;  //B口选中，读
+		else
+			PBInLd = 1'b1;  //其它情况
 			
