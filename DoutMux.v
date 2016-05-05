@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module DoutSelect(
+module DouMux(
     output[7:0] Dout,
     input[3:0] DoutSelect,
     input[7:0] PAInBuf,

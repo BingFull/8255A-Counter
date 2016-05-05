@@ -37,14 +37,49 @@ module Core(
 	input[7:0] PCin,
 	input[7:0] Din
     );
-	 assign PAout = 8'b00000000;
-	 assign PBout = 8'b00000000;
-	 assign PCout = 8'b00000000;
-	 assign Dout = 8'b00000000;
-	 assign PAEn = 0;
-	 assign PBEn = 0;
-	 assign PCEn = 8'b00000000;
-	 assign PDEn = 0;
+	
+	wire[6:0] CtrlData;
+	wire[3:0] DoutSelect;
+	wire PAInLd;
+	wire PAOutLd;
+	wire PBInLd;
+	wire PBOutLd;
+	wire[7:0] PCOutLd;
+	wire[7:0] PCStatus;
+
+	assign reset = (nCS)?1'b1:rst;;
+	
+	//实例化
+	CtrlLogic Ctrl(
+		.PAEn(PAEn),
+		.PBEn(PBEn),
+		.PCEn(PCEn),
+		.DEn(DEn),
+		.CtrlData(CtrlData),
+		.DoutSelect(DoutSelect),
+		.PAInLd(PAInLd),
+		.PAOutLd(PAOutLd),
+		.PBInLd(PBInLd),
+		.PBOutLd(PBOutLd),
+		.PCOutLd(PCOutLd),
+		.reset(reset),
+		.nRD(nRD),
+		.nWR(nWR),
+		.A(A),
+		.nCS(nCS),
+		.Din(Din),
+		.PCin(PCin)
+	);
+	
+	DoutMux DM(
+		.Dout(Dout),
+		.DoutSelect(DoutSelect),
+		.PAInBuf(PAInBuf),
+		.PAin(PAin),
+		.PBInBuf(PBInBuf),
+		.PBin(PBin),
+    	.PCStatus(PCStatus)
+	)
 	 
 	 
 
