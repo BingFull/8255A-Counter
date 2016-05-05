@@ -1,0 +1,52 @@
+module PCIO(
+	output[7:0] PCout,
+    output[7:0] PCStatus,
+	input reset,
+	input nRD,
+	input nWR,
+	input[1:0] A,
+	input[7:0] PCin,
+	input[7:0] Din,
+    input[6:0] CtrlData,
+    input[7:0] PCOutLd
+    );
+    
+    assign PCRS = CtrlData[6];
+    assign Flag = CtrlData[5];
+    assign ModeA = CtrlData[4:3];
+    assign ModeB = CtrlData[2];
+    assign PAIO = CtrlData[1];
+    assign PBIO = CtrlData[0];
+    
+    assign nSTBA = PCIn[4];
+    assign nSTBB = PCIn[2];
+    assign nACKA = PCIn[6];
+    assign nACKB = PCIn[2];
+    
+    always @(reset or Flag or PCoutLd or PCOutD)  //PCOut
+        if(reset)
+            PCOut = 8'b00000000;  //复位清0
+        else
+            if(Flag==1'b0)  //置位/复位操作
+                case(PCOutLd)
+                    8'b11111110: PCOut = {PCOut[7:1],PCRS};
+                    8'b11111101: PCOut = {PCOut[7:2],PCRS,PCOut[0]};
+                    8'b11111011: PCOut = {PCOut[7:3],PCRS,PCOut[1:0]};
+                    8'b11110111: PCOut = {PCOut[7:4],PCRS,PCOut[2:0]};
+                    8'b11101111: PCOut = {PCOut[7:5],PCRS,PCOut[3:0]};
+                    8'b11011111: PCOut = {PCOut[7:6],PCRS,PCOut[4:0]};
+                    8'b10111111: PCOut = {PCOut[7],PCRS,PCOut[5:0]};
+                    8'b01111111: PCOut = {PCRS,PCOut[6:0]};
+                    default: PCOut = 8'b11111111;
+                 endcase
+             else
+                PCOut = PCOutD;
+                //高位到低位依次处理C口输出数据
+              
+     always @()
+	 
+	 
+
+
+
+endmodule
