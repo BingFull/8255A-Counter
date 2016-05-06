@@ -1,10 +1,10 @@
 `timescale 1ns / 1ps
 
-module PAIN(
-	output[7:0] PAInBuf,  //口A输入寄存器
-	input reset,
-    input[7:0] PAIn;  //口A输入信号
-    input PAInLd;   //口A输入使能信号
+module PAIn(
+	  output[7:0] PAInBuf,  //口A输入寄存器
+	  input reset,
+    input[7:0] PAIn,  //口A输入信号
+    input PAInLd   //口A输入使能信号
     );
     
     reg[7:0] PAInBufQ;  //口A输入锁存器Q端

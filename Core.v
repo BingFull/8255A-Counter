@@ -46,6 +46,8 @@ module Core(
 	wire PBOutLd;
 	wire[7:0] PCOutLd;
 	wire[7:0] PCStatus;
+	wire[7:0] PAInBuf;
+	wire[7:0] PBInBuf;
 
 	assign reset = (nCS)?1'b1:rst;;
 	
@@ -79,10 +81,46 @@ module Core(
 		.PBInBuf(PBInBuf),
 		.PBin(PBin),
     	.PCStatus(PCStatus)
-	)
-	 
-	 
-
-
-
+	);
+	
+	PCIO pcio(
+		.PCout(PCout),
+		.PCStatus(PCStatus),
+		.reset(reset),
+		.nRD(nRD),
+		.nWR(nWR),
+		.A(A),
+		.PCin(PCin),
+		.Din(Din),
+		.CtrlData(CtrlData),
+    	.PCOutLd(PCOutLd)
+	);
+	
+	PAIn pain(
+		.PAInBuf(PAInBuf),
+		.reset(reset),
+		.PAIn(PAin),
+		.PAInLd(PAInLd)
+	);
+	
+	PAOut paout(
+		 .PAOut(PAout),
+		 .reset(reset),
+		 .PAOutLd(PAOutLd),
+    	 .Din(Din)
+	);
+	
+	PBIn pbin(
+		.PBInBuf(PBInBuf),
+		.reset(reset),
+		.PBIn(PBin),
+    	.PBInLd(PBInLd)
+	);
+	
+	PBOut pbout(
+		.PBOut(PBout),
+		.reset(reset),
+		.PBOutLd(PBOutLd),
+    	.Din(Din)
+	);
 endmodule

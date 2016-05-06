@@ -1,10 +1,10 @@
 `timescale 1ns / 1ps
 
 module PAOut(
-    output[7:0] PAOut;  //口A输出信号
-    input reset;
-    input PAOutLd;  //口A输出使能信号
-    input[7:0] Din;
+    output[7:0] PAOut,  //口A输出信号
+    input reset,
+    input PAOutLd,  //口A输出使能信号
+    input[7:0] Din
 );
 
     reg[7:0] PAOutQ;  //口A输出锁存器Q端

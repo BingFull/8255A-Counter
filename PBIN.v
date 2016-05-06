@@ -1,10 +1,10 @@
 `timescale 1ns / 1ps
 
-module PBIN(
-	output[7:0] PBInBuf,  //口B输入寄存器
-	input reset,
-    input[7:0] PBIn;  //口B输入信号
-    input PBInLd;   //口B输入使能信号
+module PBIn(
+	  output[7:0] PBInBuf,  //口B输入寄存器
+	  input reset,
+    input[7:0] PBIn,  //口B输入信号
+    input PBInLd   //口B输入使能信号
     );
     
     reg[7:0] PBInBufQ;  //口B输入锁存器Q端

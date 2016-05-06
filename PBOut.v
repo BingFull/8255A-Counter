@@ -1,10 +1,10 @@
 `timescale 1ns / 1ps
 
 module PBOut(
-    output[7:0] PBOut;  //口B输出信号
-    input reset;
-    input PBOutLd;  //口B输出使能信号
-    input[7:0] Din;
+    output[7:0] PBOut,  //口B输出信号
+    input reset,
+    input PBOutLd,  //口B输出使能信号
+    input[7:0] Din
 );
 
     reg[7:0] PBOutQ;  //口B输出锁存器Q端
